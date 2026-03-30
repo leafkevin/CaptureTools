@@ -65,7 +65,6 @@ public sealed class FindTextCore : IDisposable
         {
             // 打开较新的 DPI 感知模式，减少高分屏下截图坐标与实际像素不一致的问题。
             _ = NativeMethods.SetThreadDpiAwarenessContext(NativeMethods.DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-
         }
         catch
         {
@@ -112,8 +111,8 @@ public sealed class FindTextCore : IDisposable
         int y2 = 0,
         double err1 = 0,
         double err0 = 0,
-        bool screenShot = true,
-        bool findAll = true,
+        bool isNewScreenShot = true,
+        bool isFindAll = true,
         IReadOnlyList<string>? joinTexts = null,
         int offsetX = 20,
         int offsetY = 10,
@@ -123,7 +122,7 @@ public sealed class FindTextCore : IDisposable
     {
         // 1. 计算搜索矩形并获取截图。
         CreateSearchRect(x1, y1, x2, y2, out var x, out var y, out var w, out var h);
-        var bits = GetBitsFromScreen(ref x, ref y, ref w, ref h, screenShot, out var zx, out var zy, out _, out _);
+        var bits = GetBitsFromScreen(ref x, ref y, ref w, ref h, isNewScreenShot, out var zx, out var zy, out _, out _);
         x -= zx;
         y -= zy;
 
@@ -140,7 +139,7 @@ public sealed class FindTextCore : IDisposable
         //    `S1/S0`：记录前景/背景采样点偏移。
         //    `AllPos`：记录所有命中位置。
         //    `Errors`：在 dir=0 时用于按最小误差排序。
-        var context = CreateSearchContext(bits, x, y, w, h, zx, zy, err1, err0, zoomW, zoomH, maxPattern, findAll, joinTexts is { Count: > 0 });
+        var context = CreateSearchContext(bits, x, y, w, h, zx, zy, err1, err0, zoomW, zoomH, maxPattern, isFindAll, joinTexts is { Count: > 0 });
 
         var results = new List<FindTextResult>();
         var currentErr1 = err1;
@@ -157,7 +156,7 @@ public sealed class FindTextCore : IDisposable
                 context.Err0 = currentErr0;
             }
 
-            if (RunSearchPass(results, context, infos, infoByComment, joinTexts, findAll, offsetX, offsetY, dir))
+            if (RunSearchPass(results, context, infos, infoByComment, joinTexts, isFindAll, offsetX, offsetY, dir))
             {
                 LastResults = results;
                 return results;
@@ -182,7 +181,8 @@ public sealed class FindTextCore : IDisposable
         maxPattern = 0;
         infoByComment = new Dictionary<string, List<PicInfoData>>(StringComparer.Ordinal);
 
-        foreach (var raw in text.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        var findTexts = text.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        foreach (var raw in findTexts)
         {
             var info = PicInfo(raw);
             if (info is null)
@@ -1586,15 +1586,11 @@ public sealed class FindTextCore : IDisposable
     private PicInfoData? PicInfo(string text)
     {
         if (!text.Contains('$', StringComparison.Ordinal))
-        {
             return null;
-        }
 
         var key = text.Trim('|');
         if (_picInfoCache.TryGetValue(key, out var cached))
-        {
             return cached;
-        }
 
         var value = key;
         var comment = string.Empty;
@@ -1621,9 +1617,7 @@ public sealed class FindTextCore : IDisposable
 
         var dollar = value.IndexOf('$');
         if (dollar < 0)
-        {
             return null;
-        }
 
         var color = value[..dollar];
         var data = value[(dollar + 1)..].Trim();
@@ -2087,9 +2081,9 @@ public sealed class FindTextCore : IDisposable
     /// - `screenShot=true`：重新抓屏。
     /// - `screenShot=false`：复用上次截图。
     /// </summary>
-    private ScreenBits GetBitsFromScreen(ref int x, ref int y, ref int w, ref int h, bool screenShot, out int zx, out int zy, out int zw, out int zh)
+    private ScreenBits GetBitsFromScreen(ref int x, ref int y, ref int w, ref int h, bool isNewScreenShot, out int zx, out int zy, out int zw, out int zh)
     {
-        if (!screenShot && _bits.Scan0 != 0)
+        if (!isNewScreenShot && _bits.Scan0 != 0)
         {
             zx = _bits.Zx;
             zy = _bits.Zy;
@@ -2106,7 +2100,7 @@ public sealed class FindTextCore : IDisposable
         UpdateBits(_bits, zx, zy, zw, zh);
         ClampToScreen(ref x, ref y, ref w, ref h, zx, zy, zw, zh);
 
-        if (!screenShot || w < 1 || h < 1 || _bits.HBM == 0)
+        if (!isNewScreenShot || w < 1 || h < 1 || _bits.HBM == 0)
         {
             return _bits;
         }

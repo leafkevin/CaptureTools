@@ -296,7 +296,13 @@ public partial class MainForm : Form
     private void buttonApplyHotkey_Click(object sender, EventArgs e) => ApplyHotkey();
     private void buttonCapture_Click(object sender, EventArgs e) => CaptureFixed();
     private void buttonCaptureS_Click(object sender, EventArgs e) => CaptureFree();
-    private void buttonTest_Click(object sender, EventArgs e) => TestCode(_txtScr.Text);
+    private void buttonTest_Click(object sender, EventArgs e)
+    {
+        //var strText = "|<>2229C2-0.90$64.0000080000000001U00000000000000000000000000000000000000000000000kM1k1k07075000M0042104010U00M004E04000100010000004001400M000E040E00A001007100080040000000000E040080000100DUUEE80U4000Vk0C0TksS00000000000000000000020U000000003sU";
+        //strText = "|<>*166$63.00000A0000000001k000000000000000000000000000000000000UE000U0000wC0z1w0rk7lUkMM1UDa1XA6210A0kMM9UkE81U6331A6300A0kMM9UkD01U631XA60C0A0kMDlUk0M1U6330A641UA0kMM1UkkA1U631zAD330A0kMM8ykTkDwT7a0000000000k00000000031000000000Dw";
+        //var matches = this._core.FindText(strText, 0, 0, 2560, 1440, 0, 0);
+        TestCode(_txtScr.Text);
+    }
     private void buttonCopy_Click(object sender, EventArgs e) => CopyCode();
     private void buttonGetRange_Click(object sender, EventArgs e) => GetRange();
     private void buttonGetOffset_Click(object sender, EventArgs e) => GetOffset(false);
