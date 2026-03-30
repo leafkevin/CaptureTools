@@ -1,4 +1,4 @@
-namespace WinFormsApp1;
+namespace CaptureTools;
 
 /// <summary>
 /// 解析后的模板信息。

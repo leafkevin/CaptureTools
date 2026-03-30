@@ -1,4 +1,4 @@
-namespace WinFormsApp1;
+namespace CaptureTools;
 
 /// <summary>
 /// 一次截图缓存对应的底层位图信息。

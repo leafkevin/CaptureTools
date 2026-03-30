@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace WinFormsApp1;
+namespace CaptureTools;
 
 internal sealed class FindTextCaptureState
 {

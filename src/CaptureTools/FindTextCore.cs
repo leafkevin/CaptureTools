@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace WinFormsApp1;
+namespace CaptureTools;
 
 /// <summary>
 /// `FindText.ahk` 核心算法的 .NET 版本。

@@ -1,4 +1,4 @@
-namespace WinFormsApp1;
+namespace CaptureTools;
 
 internal sealed class RangeFlashForm : Form
 {

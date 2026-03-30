@@ -1,4 +1,4 @@
-namespace WinFormsApp1
+namespace CaptureTools
 {
     partial class CaptureToolForm
     {
@@ -17,7 +17,7 @@ namespace WinFormsApp1
         private System.Windows.Forms.Label _lblStatus;
         private System.Windows.Forms.SplitContainer splitContainerWork;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGrid;
-        private WinFormsApp1.PixelGridControl _grid;
+        private CaptureTools.PixelGridControl _grid;
         private System.Windows.Forms.VScrollBar _gridVScroll;
         private System.Windows.Forms.HScrollBar _gridHScroll;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelPreview;

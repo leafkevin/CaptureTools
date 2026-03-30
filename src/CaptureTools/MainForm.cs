@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 
-namespace WinFormsApp1;
+namespace CaptureTools;
 
-public partial class Form1 : Form
+public partial class MainForm : Form
 {
     private const int HotkeyId = 0x5300;
 
@@ -10,7 +10,7 @@ public partial class Form1 : Form
     private readonly string _screenshotDirectory = Path.Combine(Path.GetTempPath(), "Ahk_ScreenShot");
     private string? _registeredHotkey;
 
-    public Form1()
+    public MainForm()
     {
         InitializeComponent();
         _cmbHotkey.SelectedIndex = 0;
@@ -31,7 +31,7 @@ public partial class Form1 : Form
             return;
         }
 
-        using var bitmap = CaptureUtilities.CaptureScreen(rect.Value);
+        using var bitmap = Utilities.CaptureScreen(rect.Value);
         OpenCaptureTool(bitmap, rect.Value.Location);
     }
 
@@ -43,7 +43,7 @@ public partial class Form1 : Form
             return;
         }
 
-        using var bitmap = CaptureUtilities.CaptureScreen(rect.Value);
+        using var bitmap = Utilities.CaptureScreen(rect.Value);
         OpenCaptureTool(bitmap, rect.Value.Location);
     }
 
@@ -84,7 +84,7 @@ public partial class Form1 : Form
 
     private void TestCode(string source)
     {
-        var template = CaptureUtilities.ExtractFirstTemplate(source);
+        var template = Utilities.ExtractFirstTemplate(source);
         if (string.IsNullOrWhiteSpace(template))
         {
             MessageBox.Show(this, "没有找到可测试的模板字符串。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -112,7 +112,7 @@ public partial class Form1 : Form
             text = Regex.Replace(text, @"(?is)\n\s*class\s+FindTextClass.*$", string.Empty);
         }
 
-        Clipboard.SetText(CaptureUtilities.NormalizeLineEndings(text));
+        Clipboard.SetText(Utilities.NormalizeLineEndings(text));
     }
 
     private void GetRange()
@@ -137,7 +137,7 @@ public partial class Form1 : Form
             return;
         }
 
-        var template = CaptureUtilities.ExtractFirstTemplate(useClipText ? _txtClipText.Text : _txtScr.Text);
+        var template = Utilities.ExtractFirstTemplate(useClipText ? _txtClipText.Text : _txtScr.Text);
         if (string.IsNullOrWhiteSpace(template))
         {
             MessageBox.Show(this, "没有可用于偏移计算的模板。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -169,7 +169,7 @@ public partial class Form1 : Form
         }
 
         var text = Clipboard.GetText();
-        var template = CaptureUtilities.ExtractFirstTemplate(text);
+        var template = Utilities.ExtractFirstTemplate(text);
         if (string.IsNullOrWhiteSpace(template))
         {
             return;
@@ -229,7 +229,7 @@ public partial class Form1 : Form
 
     private void SyncAsciiFromCurrentScript()
     {
-        var template = CaptureUtilities.ExtractFirstTemplate(_txtScr.Text);
+        var template = Utilities.ExtractFirstTemplate(_txtScr.Text);
         if (!string.IsNullOrWhiteSpace(template))
         {
             _txtMyPic.Text = _core.ASCII(template);
@@ -287,9 +287,9 @@ public partial class Form1 : Form
             return;
         }
 
-        using var bitmap = CaptureUtilities.CaptureScreen(rect.Value);
+        using var bitmap = Utilities.CaptureScreen(rect.Value);
         var file = Path.Combine(_screenshotDirectory, $"{Directory.GetFiles(_screenshotDirectory, "*.bmp").Length + 1:000}.bmp");
-        CaptureUtilities.SaveBitmap(bitmap, file);
+        Utilities.SaveBitmap(bitmap, file);
         MessageBox.Show(this, $"截屏成功\r\n{file}", "截屏热键", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 

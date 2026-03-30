@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace WinFormsApp1;
+namespace CaptureTools;
 
 /// <summary>
 /// <c>FindTextCore</c> 使用到的 Win32 / GDI PInvoke 声明。

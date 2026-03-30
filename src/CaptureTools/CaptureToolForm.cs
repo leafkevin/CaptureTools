@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text;
 
-namespace WinFormsApp1;
+namespace CaptureTools;
 
 internal enum CaptureResultAction
 {
@@ -220,7 +220,7 @@ internal sealed partial class CaptureToolForm : Form
             return;
         }
 
-        using var cropped = CaptureUtilities.Crop(_state.SourceBitmap, _pictureSelection);
+        using var cropped = Utilities.Crop(_state.SourceBitmap, _pictureSelection);
         _state.Load(cropped, _state.ScreenX + _pictureSelection.X, _state.ScreenY + _pictureSelection.Y);
         _pictureSelection = Rectangle.Empty;
         LoadStateIntoUi();
@@ -363,7 +363,7 @@ internal sealed partial class CaptureToolForm : Form
         using var dialog = new SaveFileDialog { Filter = "Bitmap|*.bmp", FileName = "capture.bmp" };
         if (dialog.ShowDialog(this) == DialogResult.OK)
         {
-            CaptureUtilities.SaveBitmap(_state.SourceBitmap, dialog.FileName);
+            Utilities.SaveBitmap(_state.SourceBitmap, dialog.FileName);
             LoadSavedImages();
             SetStatus($"已保存图片到 {dialog.FileName}");
         }
@@ -377,10 +377,10 @@ internal sealed partial class CaptureToolForm : Form
             return;
         }
 
-        using var bitmap = CaptureUtilities.Crop(_state.SourceBitmap, bounds);
+        using var bitmap = Utilities.Crop(_state.SourceBitmap, bounds);
         Directory.CreateDirectory(_screenshotDirectory);
         var file = Path.Combine(_screenshotDirectory, $"trimmed_{DateTime.Now:yyyyMMdd_HHmmss}.bmp");
-        CaptureUtilities.SaveBitmap(bitmap, file);
+        Utilities.SaveBitmap(bitmap, file);
         LoadSavedImages();
         SetStatus($"已保存裁剪图到 {file}");
     }

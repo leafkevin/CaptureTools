@@ -1,4 +1,4 @@
-namespace WinFormsApp1;
+namespace CaptureTools;
 
 /// <summary>
 /// 单个命中结果。
